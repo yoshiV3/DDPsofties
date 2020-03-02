@@ -7,7 +7,7 @@
 
 // Note that these tree CMDs are same as
 // they are defined in montgomery_wrapper.v
-#define CMD_COMPUTE_EXP                0
+#define CMD_COMPUTE_EXP                6
 #define CMD_COMPUTE_MONT               1
 #define CMD_READ_MOD                   2
 #define CMD_READ_RSQ                   3

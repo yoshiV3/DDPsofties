@@ -167,14 +167,14 @@ int main()
 		srcW[i] = 0;
 	}
 	CMD_WRITE_HW_accelerator(srcW);
+
 	uint32_t T_p[32];
 	uint32_t T_q[32];
 	uint32_t Ttemp[32];
 	uint32_t T[32];
 	uint32_t plaintext[32];
 
-	uint32_t src2[32] = {0x7f28d041, 0xef1a5c9b, 0x960f593b, 0x0704632e, 0xae04966d, 0xbc7b0191, 0x1845ce62, 0x4bc94140, 0x59296477, 0xd74d151d, 0xb5f3e40f, 0xde22f56d, 0xd7147dc8, 0xe254ca4d, 0x1fa73428, 0x3d55fd1f,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0};
-	montMulOpt(src2,x_p,N,N_prime,T_p,32);
+	montMulOpt(src,x_p,N,N_prime,T_p,32);
 	montMulOpt(srcW,x_q,N,N_prime,T_q,32);
 
 
@@ -185,6 +185,7 @@ int main()
 	STOP_TIMING
 
 	customprint3(plaintext, "h",32);
+	//customprint3(cp, "h",16);
 	cleanup_platform();
     return 0;
 }

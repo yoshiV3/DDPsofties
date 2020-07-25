@@ -34,9 +34,12 @@ void customprint(uint32_t *in, char *str, uint32_t size);
 
 int main()
 {
+	xil_printf("Start");
     init_platform();
-    init_performance_counters(1);
+    xil_printf("P done");
+    //init_performance_counters(1);
     init_HW_access();
+    xil_printf("Access");
 
 
 //    example_HW_accelerator();
@@ -44,9 +47,12 @@ int main()
     uint32_t src[32];
     uint32_t modulus[32] = {0x22657e83, 0xf1e3a8f4, 0xad407fdc, 0xa89fb32d, 0x0424a00c, 0xc238f070, 0x4e49a42a, 0xfd7babf7, 0xae77882a, 0x4d869657, 0xedf1795c, 0x982df051, 0x379c9f93, 0x014faf07, 0xfd6eb140, 0x8dc4379c,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0};
     uint32_t a[32] =  {0xc33a1372, 0x9704268d, 0xa209116b, 0x1b2479d5, 0x933a4d1e, 0x1e4a56c1, 0x012ac09f, 0x98d8b668, 0x6055d814, 0xa6a7e1fe, 0x28b8d34b, 0x7c330d8c, 0x08ebc866, 0xc65743ee, 0x7d37bf2a, 0xda8f5c92,0xedbbe33c, 0xb78a1752, 0xacbb31d3, 0x3106f880, 0x4eba864e, 0x3f771c3f, 0x05e43d3b, 0xb871a75f, 0x6396f35d, 0x7eb9a0ca, 0x2405c20c, 0x345d17b6, 0xdaf47fed, 0x2208ae0e, 0xc2d12d12, 0xdebcfd28};
+    xil_printf("Start");
 	CMD_READ_MOD_HW_accelerator(modulus);
 	CMD_READ_RSQ_HW_accelerator(a);
+	xil_printf("Computing...");
 	CMD_COMPUTE_MONT_HW_accelerator();
+	xil_printf("END");
 	for(uint32_t i=0; i<32; i++){
 			src[i] = 0;
 	}

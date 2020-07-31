@@ -40,40 +40,78 @@ void mp_sub(uint32_t *a, uint32_t *b, uint32_t *res, uint32_t size)
 	}
 }
 
-// Calculates res = (a + b) mod N.
-// a and b represent operands, N is the modulus. They are large integers stored in uint32_t arrays of size elements
+
 void mod_add(uint32_t *a, uint32_t *b, uint32_t *N, uint32_t *res, uint32_t size)
 {
-    int bigger = 0;
-    uint32_t temp[size+1];
-    uint32_t done = 0;
-    mp_add(a, b, temp,size);
-    if (temp[size] == 0){
-        while(done != size-1 && bigger == 0 ){
-            if(temp[(size-done)] >= N[(size-done)] ){
-                bigger = 1;
-            }
-            done++;
-        }
-    }
-    else {
-    	bigger = 1;
-    }
-    if (bigger > 0){
-    	uint32_t temp_N[size+1];
-        for (uint32_t index =0; index <size ; index++){
-           temp_N[index] = N[index];
-        }
-        temp_N[size] = 0x00000000;
-        mp_sub(temp,temp_N, res,size+1);
-    }
-    else {
-        for (uint32_t index =0; index <=size ; index++){
-           res[index] = temp[index];
-        }
-    }
+	uint32_t tempRes[size+1];
+	uint32_t aExtended[size+1];
+	uint32_t bExtended[size+1];
+	uint8_t i;
+	for (i=0; i< size; i++) {
+		aExtended[i] = a[i];
+		bExtended[i] = b[i];
+	}
+	aExtended[size] = 0;
+	bExtended[size] = 0;
+	mp_add(aExtended, bExtended, tempRes,size+1);
+	uint32_t temp;
+
+	uint32_t negative_carry = 0;
+	for (i=0; i < size; i++) {
+		temp = tempRes[i] - N[i] - negative_carry;
+		res[i] = (uint32_t) temp; //Cast to 32 bit
+		if (tempRes[i] > N[i] + negative_carry) {
+			negative_carry = 0;
+		} else {
+			negative_carry = 1;
+		}
+	}
+	if ((tempRes[size] - negative_carry)!=0) {
+
+		for (i=0; i < size; i++) {
+			res[i] = tempRes[i];
+		}
+	}
 
 }
+
+
+// Calculates res = (a + b) mod N.
+// a and b represent operands, N is the modulus. They are large integers stored in uint32_t arrays of size elements
+
+// BROKEN DONT USE!!!!!!!!!!!!!!!!!!!!!!
+//void mod_add(uint32_t *a, uint32_t *b, uint32_t *N, uint32_t *res, uint32_t size)
+//{
+//    int bigger = 0;
+//    uint32_t temp[size+1];
+//    uint32_t done = 0;
+//    mp_add(a, b, temp,size);
+//    if (temp[size] == 0){
+//        while(done != size-1 && bigger == 0 ){
+//            if(temp[(size-done)] >= N[(size-done)] ){
+//                bigger = 1;
+//            }
+//            done++;
+//        }
+//    }
+//    else {
+//    	bigger = 1;
+//    }
+//    if (bigger > 0){
+//    	uint32_t temp_N[size+1];
+//        for (uint32_t index =0; index <size ; index++){
+//           temp_N[index] = N[index];
+//        }
+//        temp_N[size] = 0x00000000;
+//        mp_sub(temp,temp_N, res,size+1);
+//    }
+//    else {
+//        for (uint32_t index =0; index <=size ; index++){
+//           res[index] = temp[index];
+//        }
+//    }
+//
+//}
 
 // Calculates res = (a - b) mod N.
 // a and b represent operands, N is the modulus. They are large integers stored in uint32_t arrays of size elements

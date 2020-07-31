@@ -41,7 +41,9 @@ int main()
 	START_TIMING
 	exponentation(M, R_1024, R2_1024, e,e_len, N,N_prime,c, 32);
 	STOP_TIMING
+
 	START_TIMING
+	//ReductionQ
 	for(i=0; i<16;i++)
 	{
 		src[i]    = q[i];
@@ -59,20 +61,24 @@ int main()
 		srcW[i] = 0;
 	}
 	CMD_WRITE_HW_accelerator(srcW);
-	for(uint32_t i=0; i<32; i++){
-			src[i] = 0;
-	}
-	mp_add(srcW, c, src, 16);
-	for(uint32_t i=0; i<16; i++){
-				src[16 + i] =  Rq[i];
-	}
-	//CMD_READ_MOD_HW_accelerator(src);
-	CMD_READ_RSQ_HW_accelerator(src);
-	CMD_COMPUTE_MONT_HW_accelerator();
-	for(uint32_t i=0; i<32; i++){
-				src[i] = 0;
-	}
-	CMD_WRITE_HW_accelerator(src);
+//	for(uint32_t i=0; i<32; i++){
+//			src[i] = 0;
+//	}
+//	uint32_t srcResult[16];
+//	for(uint32_t i=0; i<16; i++){
+//		srcResult[i] = srcW[i];
+//	}
+	mod_add(srcW, c, q, src, 16);
+//	for(uint32_t i=0; i<16; i++){
+//				src[16 + i] =  Rq[i];
+//	}
+//	//CMD_READ_MOD_HW_accelerator(src);
+//	CMD_READ_RSQ_HW_accelerator(src);
+//	CMD_COMPUTE_MONT_HW_accelerator();
+//	for(uint32_t i=0; i<32; i++){
+//				src[i] = 0;
+//	}
+//	CMD_WRITE_HW_accelerator(src);
 	for(uint32_t i=0; i<16; i++)
 	{
 		cq[i]    = src[i];
@@ -98,19 +104,24 @@ int main()
 		srcW[i] = 0;
 	}
 	CMD_WRITE_HW_accelerator(srcW);
-	for(uint32_t i=0; i<32; i++){
-			src[i] = 0;
-	}
-	mp_add(srcW, c, src, 16);
-	for(uint32_t i=0; i<16; i++){
-				src[16 + i] =  Rp[i];
-	}
-	CMD_READ_RSQ_HW_accelerator(src);
-	CMD_COMPUTE_MONT_HW_accelerator();
-	for(uint32_t i=0; i<32; i++){
-				src[i] = 0;
-	}
-	CMD_WRITE_HW_accelerator(src);
+
+
+
+//	for(uint32_t i=0; i<32; i++){
+//			src[i] = 0;
+//	}
+	mod_add(srcW, c, p, src, 16);
+
+
+	//for(uint32_t i=0; i<16; i++){
+	//			src[16 + i] =  Rp[i];
+	//}
+//	CMD_READ_RSQ_HW_accelerator(src);
+//	CMD_COMPUTE_MONT_HW_accelerator();
+//	for(uint32_t i=0; i<32; i++){
+//				src[i] = 0;
+//	}
+//	CMD_WRITE_HW_accelerator(src);
 	for(uint32_t i=0; i<16; i++)
 	{
 		cp[i]    = src[i];
@@ -185,7 +196,7 @@ int main()
 	STOP_TIMING
 
 	customprint3(plaintext, "h",32);
-	//customprint3(cp, "h",16);
+	//customprint3(srcResult, "h",16);
 	cleanup_platform();
     return 0;
 }
